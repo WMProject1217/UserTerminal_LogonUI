@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+    <title>UserTerminal</title>
+    <script src="./lib/wmcomlib.js/wmmath.js"></script>
+    <script src="./lib/wmcomlib.js/wmtime.js"></script>
+    <style>
+        @font-face {
+            font-family: 'pagefont_HK3RD';
+            src: url('./fonts/HK3RD.ttf');
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'pagefont_HKSR';
+            src: url('./fonts/HKSR.ttf');
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'pagefont_YSCN';
+            src: url('./fonts/YSCN.ttf');
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'pagefont_ZZZCN';
+            src: url('./fonts/ZZZCN.ttf');
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'pagefont_ZZZEN';
+            src: url('./fonts/ZZZEN.ttf');
+            font-weight: bold;
+        }
+        
+        @font-face {
+            font-family: 'pagefont_XianzhouSeal';
+            src: url('./fonts/XianzhouSeal-Regular.ttf');
+            font-weight: bold;
+        }
+        
+        body {
+            background-color: #000000;
+        }
+
+        .UserTerminal_LogonUI_Container {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            background-color: transparent;
+            z-index: 3000;
+            user-select: none;
+        }
+
+        .UserTerminal_LogonUI_Container .background0 {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 3025;
+        }
+
+        .UserTerminal_LogonUI_Container .background0.status0 {
+            opacity: 0;
+        }
+
+        .UserTerminal_LogonUI_Container .background0.status1 {
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .background0.status2 {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .background0.status3 {
+            opacity: 1;
+        }
+
+        .UserTerminal_LogonUI_Container .background1 {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: 3026;
+        }
+
+        .UserTerminal_LogonUI_Container .background1.status0 {
+            opacity: 0;
+        }
+
+        .UserTerminal_LogonUI_Container .background1.status1 {
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .background1.status2 {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .background1.status3 {
+            opacity: 1;
+        }
+
+        .UserTerminal_LogonUI_Container .backgroundcover {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            z-index: 3029;
+        }
+
+        .UserTerminal_LogonUI_Container .backgroundcover.status0 {
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        .UserTerminal_LogonUI_Container .backgroundcover.status1 {
+            background-color: rgba(0, 0, 0, .38);
+            transition-property: background-color;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .backgroundcover.status2 {
+            background-color: rgba(0, 0, 0, 0);
+            transition-property: background-color;
+            transition-duration: .3s;
+        }
+        
+        .UserTerminal_LogonUI_Container .backgroundcover.status3 {
+            background-color: rgba(0, 0, 0, .38);
+        }
+                
+        .UserTerminal_LogonUI_Container .backgroundcover.status4 {
+            background-color: rgba(0, 0, 0, .62);
+        }
+
+        .UserTerminal_LogonUI_Container .backgroundcover.status5 {
+            background-color: rgba(0, 0, 0, .62);
+            transition-property: background-color;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .timebox {
+            position: fixed;
+            bottom: 20px;
+            left: 0px;
+            width: 480px;
+            height: 320px;
+            color: #FFFFFF;
+            text-shadow: 1px 1px 1px #5F5F5F;
+            z-index: 3088;
+        }
+
+        .UserTerminal_LogonUI_Container .timebox.status0 {
+            opacity: 0;
+        }
+
+        .UserTerminal_LogonUI_Container .timebox.status1 {
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .timebox.status2 {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .timebox.status3 {
+            opacity: 1;
+        }
+
+        .UserTerminal_LogonUI_Container .timebox .hr {
+            position: absolute;
+            top: 32px;
+            left: 32px;
+            font-size: 118px;
+            letter-spacing: 3px;
+            font-family: "Microsoft YaHei Light";
+        }
+
+        .UserTerminal_LogonUI_Container .timebox .dy {
+            position: absolute;
+            top: 174px;
+            left: 32px;
+            font-size: 52px;
+            letter-spacing: 2px;
+            font-family: "Microsoft YaHei UI";
+        } 
+
+        .UserTerminal_LogonUI_Container .playerbox {
+            position: fixed;
+            bottom: 100px;
+            right: 0px;
+            width: 360px;
+            height: 110px;
+            background-color: rgba(0, 0, 0, .84);
+            color: #FFFFFF;
+            text-shadow: 1px 1px 1px #5F5F5F;
+            z-index: 3084;
+        }
+
+        .UserTerminal_LogonUI_Container .playerbox.status0 {
+            opacity: 0;
+        }
+
+        .UserTerminal_LogonUI_Container .playerbox.status1 {
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .playerbox.status2 {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .playerbox.status3 {
+            opacity: 1;
+        }
+
+        .UserTerminal_LogonUI_Container .playerbox .cover {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+        }
+        
+        .UserTerminal_LogonUI_Container .playerbox .title {
+            position: absolute;
+            top: 0px;
+            left: 115px;
+            width: 240px;
+            height: 48px;
+            line-height: 48px;
+            font-size: 20px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-family: "Microsoft YaHei Light";
+        }
+
+        .UserTerminal_LogonUI_Container .iconlist {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            z-index: 3086;
+        }
+
+        .UserTerminal_LogonUI_Container .iconlist.status0 {
+            opacity: 0;
+        }
+
+        .UserTerminal_LogonUI_Container .iconlist.status1 {
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .iconlist.status2 {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .iconlist.status3 {
+            opacity: 1;
+        }
+
+        .UserTerminal_LogonUI_Container .iconlist img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .UserTerminal_LogonUI_Container .operatecatch {
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: 100vw;
+            height: 100vh;
+            z-index: 3090;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox {
+            color: #FFFFFF;
+            z-index: 3060;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox {
+            font-family: 'pagefont_ZZZCN'!important;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox {
+            position: fixed;
+            left: 38px; 
+            bottom: 21px; 
+            width: 320px; 
+            height: auto;  
+            background-color: transparent;
+            z-index: 3062;
+        }
+        
+        .UserTerminal_LogonUI_Container .logonbox .switchbox.status0 {
+            opacity: 0;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox.status1 {
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox.status2 {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox.status3 {
+            opacity: 1;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox .item {
+            position: relative; 
+            padding: 0px;
+            margin-top: 4px; 
+            height: 45px; 
+            line-height: 45px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            color: #FFFFFF;
+            transition-property: color, background-color;
+            transition-duration: .3s;
+            text-shadow: 1px 1px 8px rgba(0,0,0,.15);
+            width: 100%;
+            text-align: left;
+            outline: none;
+            font-family: 'pagefont_ZZZCN'!important;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox .item.selected {
+            background-color: rgba(255, 255, 255, .38);
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox .item:hover:enabled {
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox .item:active:enabled {
+            background-color: #D9D9D9;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox .item img {
+            position: absolute;
+            height: 45px;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .switchbox .item div {
+            display: inline-block; 
+            margin-left: 50px; 
+            font-size: 18px; 
+            text-shadow: 1px 1px 8px rgba(0, 0, 0, .15);
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox {
+            position: fixed; 
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            margin: auto;
+            margin-top: 25vh;
+            height: 360px;
+            width: 500px;
+            z-index: 3063;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox.status0 {
+            opacity: 0;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox.status1 {
+            opacity: 1;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox.status2 {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: .3s;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox.status3 {
+            opacity: 1;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .avatar {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 187px;
+            width: 187px;
+            object-fit: contain;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .name {
+            position: absolute; 
+            top: 0px; 
+            left: 198px; 
+            height: auto; 
+            width: auto; 
+            font-size: 42px;
+            text-shadow: 1px 1px 8px rgba(0, 0, 0, .15);
+            font-family: 'pagefont_ZZZCN'!important;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .ciallo {
+            position: absolute; 
+            top: 50px; 
+            left: 198px; 
+            height: auto; 
+            width: auto; 
+            font-size: 25px;
+            z-index: 3065; 
+            text-shadow: 1px 1px 8px rgba(0, 0, 0, .15); 
+            font-family: 'pagefont_ZZZCN'!important;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .inputname {
+            position: absolute; 
+            top: 52px; 
+            left: 198px; 
+            height: auto; 
+            width: 300px; 
+            font-size: 18px; 
+            z-index: 3064;
+            font-family: 'pagefont_ZZZCN'!important;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .inputpassword {
+            position: absolute;
+            top: 85px; 
+            left: 198px; 
+            height: auto; 
+            width: 300px; 
+            font-size: 18px; 
+            z-index: 3064;
+            font-family: 'pagefont_ZZZCN'!important;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .inputpassword.noinputstatus {
+            top: 52px;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox input[type=text] {
+            padding: 3px 4px;
+            box-sizing: border-box;
+            border: 1px solid #AAAAAA;
+            background-color: #FFFFFF;
+            color: #000000;
+            resize: none;
+            outline: none;
+            height: 32px;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox input[type=password] {
+            padding: 3px 4px;
+            box-sizing: border-box;
+            border: 1px solid #AAAAAA;
+            background-color: #FFFFFF;
+            color: #000000;
+            resize: none;
+            outline: none;
+            height: 32px;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .logonbutton {
+            cursor: pointer;
+            border: 2px solid #FFFFFF;
+            background-color: transparent;
+            color: #FFFFFF;
+            font-size: 15px;
+            outline: 0;
+            transition-property: color,background-color;
+            transition-duration: .3s;
+            text-shadow: 1px 1px 8px rgba(0, 0, 0, .15);
+            padding: 0px 0px;
+            position: absolute; 
+            top: 120px; 
+            left: 198px; 
+            height: 37.5px; 
+            width: 170px; 
+            font-size: 18px; 
+            z-index: 3064;
+            font-family: 'pagefont_ZZZCN'!important;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .logonbutton.noinputstatus {
+            top: 85px;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .logonbutton:hover:enabled {
+            background-color: #FFFFFF;
+            border-color: transparent;
+            color: #000000;
+            box-shadow: 1px 1px 30px rgba(0, 0, 0, .15),0 6px 15px rgba(36, 37, 38, .15),inset 5px 5px 15px transparent;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .logonbutton:active:enabled {
+            background-color: #D9D9D9;
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .errormsg {
+            position: absolute; 
+            top: 160px; 
+            left: 198px; 
+            height: auto; 
+            width: auto; 
+            font-size: 18px; 
+            z-index: 3065; 
+            text-shadow: 1px 1px 8px rgba(0, 0, 0, .15); 
+            color: #EEEE00; 
+        }
+
+        .UserTerminal_LogonUI_Container .logonbox .mainbox .errormsg.noinputstatus {
+            top: 125px;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        window.WMSystem_EventCallBack_KeyDown = function(event) {};
+        document.addEventListener('keydown', function(event) { window.WMSystem_EventCallBack_KeyDown(event); });
+
+        window.UserTerminal_LogonUI = {
+            syslock: 0,
+            systransforming: 0,
+            transformBackgroundlock: 1,
+            uilock: 0,
+            uiclock: 60,
+            updateTime: async function() {
+                //Update timebox
+                if (this.ep_timebox_hr == undefined) {
+                    console.warn("FUCK: UNKNOWN HARD ERROR");
+                    return;
+                }
+                if (this.ep_timebox_dy == undefined) {
+                    console.warn("FUCK: UNKNOWN HARD ERROR");
+                    return;
+                }
+                this.temp_ut_LogonUI_TimeUpdate_val0 = WMTime.GetNowTimeSCStr().split("-");
+                this.temp_ut_LogonUI_TimeUpdate_val1 = this.temp_ut_LogonUI_TimeUpdate_val0[0].split("/");
+                this.temp_ut_LogonUI_TimeUpdate_val2 = this.temp_ut_LogonUI_TimeUpdate_val0[1].split(":");
+                this.ep_timebox_hr.innerHTML = this.temp_ut_LogonUI_TimeUpdate_val2[0] + ":" + this.temp_ut_LogonUI_TimeUpdate_val2[1];
+                this.ep_timebox_dy.innerHTML = this.temp_ut_LogonUI_TimeUpdate_val1[1] + "月" + this.temp_ut_LogonUI_TimeUpdate_val1[2] + "日," + this.temp_ut_LogonUI_TimeUpdate_val1[0] + "年";
+            },
+            transformBackground: async function(src) {
+                //Update background
+                if (this.syslock == 1) {
+                    console.warn("FUCK: BUS LOCKED");
+                    return;
+                }
+                if (this.transformBackgroundlock == 1) {
+                    console.warn("FUCK: SUBSYSTEM BUS LOCKED");
+                    return;
+                }
+                this.transformBackgroundlock = 1;
+                if (this.uilock == 1) {
+                    this.ep_operatecatch.style.display = "block";
+                }
+                this.ep_background0.classList.remove("status3");
+                this.ep_background0.classList.add("status2");
+                this.transform_temp_0 = 0;
+                setTimeout(() => {
+                    this.ep_background0.classList.remove("status2");
+                    this.ep_background0.classList.add("status0");
+                    this.ep_background0.src = src;
+                    this.transform_temp_0 = 1;
+                }, 1000);
+                this.ep_background1.src = src;
+                var timerxd = setInterval(() => {
+                    if (this.ep_background1.complete) {
+                        clearInterval(timerxd);
+                        this.ep_background1.classList.remove("status0");
+                        this.ep_background1.classList.add("status1");
+                        setTimeout(() => {
+                            var timerxdm = setInterval(() => {
+                                if (this.transform_temp_0 == 1) {
+                                    if (this.ep_background0.complete) {
+                                        clearInterval(timerxdm);
+                                        this.ep_background0.classList.remove("status0");
+                                        this.ep_background0.classList.add("status3");
+                                        this.ep_background1.classList.remove("status1");
+                                        this.ep_background1.classList.add("status0");
+                                        this.transformBackgroundlock = 0;
+                                        if (this.uilock == 1) {
+                                            this.ep_operatecatch.style.display = "none";
+                                        }
+                                    }
+                                }
+                            }, 50);
+                        }, 1000);
+                    }
+                }, 50);
+            },
+            onclick: function() {
+                //When click the lockscreen
+                if (this.syslock == 1) {
+                    console.warn("FUCK: BUS LOCKED");
+                    return;
+                }
+                if (this.systransforming == 1) {
+                    console.warn("FUCK: BUS BUSY");
+                    return;
+                }
+                window.WMSystem_EventCallBack_KeyDown = function(event) {};
+                this.syslock = 1;
+                this.ep_timebox.classList.remove("status3");
+                this.ep_timebox.classList.add("status2");
+                this.ep_iconlist.classList.remove("status3");
+                this.ep_iconlist.classList.add("status2");
+                this.ep_backgroundcover.classList.remove("status0");
+                this.ep_backgroundcover.classList.add("status5");
+                setTimeout(() => {
+                    this.syslock = 0;
+                    this.init_logonbox();
+                }, 250);
+                setTimeout(() => {
+                    this.ep_timebox.classList.remove("status2");
+                    this.ep_timebox.classList.add("status0");
+                    this.ep_iconlist.classList.remove("status2");
+                    this.ep_iconlist.classList.add("status0");
+                    this.ep_backgroundcover.classList.remove("status5");
+                    this.ep_backgroundcover.classList.add("status4");
+                    this.ep_timebox.style.display = "none";
+                    this.ep_iconlist.style.display = "none";
+                    this.ep_operatecatch.style.display = "none";
+                }, 400);
+            },
+            onlogonclick: function() {
+                this.uiclock = 32;
+                this.ep_logonbox_mainbox_errormsg.innerHTML = "很抱歉，现在无法登录到您的账号。<br>错误5:拒绝访问。";
+                this.ep_logonbox_mainbox_errormsg.style.display = "block";
+                console.log(window.UserTerminal_LogonUI.ep_logonbox_mainbox_inputname.value);
+                console.log(window.UserTerminal_LogonUI.ep_logonbox_mainbox_inputpassword.value);
+                this.temp_eplist = this.ep_logonbox_switchbox.getElementsByClassName("item");
+                for (var i = 0; i < this.temp_eplist.length; i++) {
+                    if (this.temp_eplist[i].classList.contains("selected")) {
+                        console.log(i);
+                        console.log(this.temp_eplist[i].dataset.type);
+                        break;
+                    }
+                }
+                window.UserTerminal_LogonUI.logonprocess();
+            },
+            logonprocess: function() {
+                //Logon to system
+                if (this.syslock == 1) {
+                    console.warn("FUCK: BUS LOCKED");
+                    return;
+                }
+                if (this.systransforming == 1) {
+                    console.warn("FUCK: BUS BUSY");
+                    return;
+                }
+                this.systransforming = 1;
+                this.syslock = 1;
+                clearInterval(this.p_uitimer);
+                this.temp_eplist = this.ep_logonbox_switchbox.getElementsByClassName("item");
+                for (var i = 0; i < this.temp_eplist.length; i++) {
+                    if (this.temp_eplist[i].classList.contains("selected")) {
+                        if ((this.temp_eplist[i].dataset.type == 17) || (this.temp_eplist[i].dataset.type == 18)) {
+                            this.ep_logonbox_mainbox_name.innerHTML = window.UserTerminal_LogonUI.ep_logonbox_mainbox_inputname.value;
+                        }
+                        break;
+                    }
+                }
+                this.ep_logonbox_switchbox.classList.remove("status3");
+                this.ep_logonbox_switchbox.classList.add("status2");
+                this.ep_backgroundcover.classList.remove("status4");
+                this.ep_backgroundcover.classList.add("status1");
+                this.ep_logonbox_mainbox_inputname.style.display = "none";
+                this.ep_logonbox_mainbox_inputpassword.style.display = "none";
+                this.ep_logonbox_mainbox_logonbutton.style.display = "none";
+                this.ep_logonbox_mainbox_errormsg.style.display = "none";
+                this.ep_logonbox_mainbox_ciallo.style.display = "block";
+                setTimeout(() => {
+                    this.logonciallotimer_value = 0;
+                    this.logonciallotimer_string = "正在准备 Windows";
+                    this.logonciallotimer = setInterval(() => {
+                        if (this.logonciallotimer_value == 0) {
+                            this.ep_logonbox_mainbox_ciallo.innerHTML = this.logonciallotimer_string + "_";
+                        }
+                        if (this.logonciallotimer_value == 1) {
+                            this.ep_logonbox_mainbox_ciallo.innerHTML = this.logonciallotimer_string;
+                        }
+                        this.logonciallotimer_value = this.logonciallotimer_value + 1;
+                        if (this.logonciallotimer_value >= 2) {
+                            this.logonciallotimer_value = 0;
+                        }
+                    }, 500);
+                }, 300);
+                setTimeout(() => {
+                    this.ep_logonbox_switchbox.classList.remove("status2");
+                    this.ep_logonbox_switchbox.classList.add("status0");
+                    this.ep_backgroundcover.classList.remove("status1");
+                    this.ep_backgroundcover.classList.add("status3");
+                    this.ep_logonbox_switchbox.style.display = "none";
+                }, 400);
+            },
+            init_logonbox_genpart0: function(src, name, isSelected = 0) {
+                this.temp_ep = document.createElement("button");
+                this.temp_ep.classList.add("item");
+                this.temp_epa = document.createElement("img");
+                this.temp_epa.src = src;
+                this.temp_ep.appendChild(this.temp_epa);
+                this.temp_epb = document.createElement("div");
+                this.temp_epb.innerHTML = name;
+                this.temp_ep.appendChild(this.temp_epb);
+                return this.temp_ep;
+            },
+            init_logonbox: function() {
+                if (this.syslock == 1) {
+                    console.warn("FUCK: BUS LOCKED");
+                    return;
+                }
+                if (this.systransforming == 1) {
+                    console.warn("FUCK: BUS BUSY");
+                    return;
+                }
+                if (this.uilock == 1) {
+                    console.warn("FUCK: LOCKED");
+                    return;
+                }
+                this.systransforming = 1;
+                this.uilock = 1;
+                setTimeout(() => {
+                    this.ep_logonbox_mainbox.classList.remove("status0");
+                    this.ep_logonbox_mainbox.classList.add("status1");
+                    this.ep_logonbox_switchbox.classList.remove("status0");
+                    this.ep_logonbox_switchbox.classList.add("status1");
+                    setTimeout(() => {
+                        this.ep_logonbox_mainbox.classList.remove("status1");
+                        this.ep_logonbox_mainbox.classList.add("status3");
+                        this.ep_logonbox_switchbox.classList.remove("status1");
+                        this.ep_logonbox_switchbox.classList.add("status3");
+                        this.systransforming = 0;
+                        this.uiclock = 32;
+                        this.p_uitimer = setInterval(() => {
+                            this.uiclock = this.uiclock - 1;
+                            //console.log(this.uiclock);
+                            if (this.uiclock <= 0) {
+                                this.init_relock();
+                                clearInterval(this.p_uitimer);
+                            }
+                        }, 1000);
+                    }, 400);
+                }, 100);
+            },
+            init_relock: function() {
+                //Want to relock
+                if (this.syslock == 1) {
+                    console.warn("FUCK: BUS LOCKED");
+                    return;
+                }
+                if (this.systransforming == 1) {
+                    console.warn("FUCK: BUS BUSY");
+                    return;
+                }
+                this.systransforming = 1;
+                this.syslock = 1;
+                this.ep_logonbox_mainbox.classList.remove("status3");
+                this.ep_logonbox_mainbox.classList.add("status2");
+                this.ep_logonbox_switchbox.classList.remove("status3");
+                this.ep_logonbox_switchbox.classList.add("status2");
+                setTimeout(() => {
+                    this.ep_timebox.style.display = "block";
+                    this.ep_iconlist.style.display = "block";
+                    this.ep_operatecatch.style.display = "block";
+                }, 20);
+                setTimeout(() => {
+                    this.ep_timebox.classList.remove("status0");
+                    this.ep_timebox.classList.add("status1");
+                    this.ep_iconlist.classList.remove("status0");
+                    this.ep_iconlist.classList.add("status1");
+                    this.ep_backgroundcover.classList.remove("status4");
+                    this.ep_backgroundcover.classList.add("status2");
+                }, 100);
+                setTimeout(() => {
+                    this.ep_logonbox_mainbox.classList.remove("status2");
+                    this.ep_logonbox_mainbox.classList.add("status0");
+                    this.ep_logonbox_switchbox.classList.remove("status2");
+                    this.ep_logonbox_switchbox.classList.add("status0");
+                }, 400);
+                setTimeout(() => {
+                    this.ep_timebox.classList.remove("status1");
+                    this.ep_timebox.classList.add("status3");
+                    this.ep_iconlist.classList.remove("status1");
+                    this.ep_iconlist.classList.add("status3");
+                    this.ep_backgroundcover.classList.remove("status2");
+                    this.ep_backgroundcover.classList.add("status0");
+                    this.systransforming = 0;
+                    this.uilock = 0;
+                    this.syslock = 0;
+                    window.WMSystem_EventCallBack_KeyDown = (event) => {
+                        if (event.keyCode == 32) {
+                            this.onclick();
+                        }
+                    }
+                }, 500);
+            },
+            init: async function() {
+                if (this.syslock == 1) {
+                    console.warn("FUCK: BUS LOCKED");
+                    return;
+                }
+                if (this.systransforming == 1) {
+                    console.warn("FUCK: BUS BUSY");
+                    return;
+                }
+                this.syslock = 1;
+                this.systransforming = 1;
+                //Initialize the container
+                this.ep_container = document.createElement("div");
+                this.ep_container.id = "UserTerminal_LogonUI_Container";
+                this.ep_container.classList.add("UserTerminal_LogonUI_Container");
+                //Initialize the background elements
+                this.ep_background0 = document.createElement("img");
+                this.ep_background1 = document.createElement("img");
+                this.ep_background0.classList.add("background0");
+                this.ep_background1.classList.add("background1");
+                this.ep_background0.classList.add("status3");
+                this.ep_background1.classList.add("status0");
+                this.ep_background0.src = "./images/background/black.png";
+                this.ep_backgroundcover = document.createElement("div");
+                this.ep_backgroundcover.classList.add("backgroundcover");
+                this.ep_backgroundcover.classList.add("status0");
+                //Initialize the timebox
+                this.ep_timebox = document.createElement("div");
+                this.ep_timebox.classList.add("timebox");
+                this.ep_timebox.classList.add("status0");
+                this.ep_timebox_hr = document.createElement("div");
+                this.ep_timebox_hr.classList.add("hr");
+                this.ep_timebox_dy = document.createElement("div");
+                this.ep_timebox_dy.classList.add("dy");
+                this.ep_timebox.appendChild(this.ep_timebox_hr);
+                this.ep_timebox.appendChild(this.ep_timebox_dy);
+                //Initialize the iconlist
+                this.ep_iconlist = document.createElement("div");
+                this.ep_iconlist.classList.add("iconlist");
+                this.ep_iconlist.classList.add("status0");
+                this.ep_iconlist_net = document.createElement("img");
+                this.ep_iconlist_net.src = "./images/icon/Network_Wired.png";
+                this.ep_iconlist_bty = document.createElement("img");
+                this.ep_iconlist_bty.src = "./images/icon/chargeInProcessing.png";
+                this.ep_iconlist.appendChild(this.ep_iconlist_net);
+                this.ep_iconlist.appendChild(this.ep_iconlist_bty);
+                //Initialize the operatecatch
+                this.ep_operatecatch = document.createElement("div");
+                this.ep_operatecatch.classList.add("operatecatch");
+                this.ep_operatecatch.onclick = () => { this.onclick(); };
+                //Initialize logonbox
+                this.ep_logonbox = document.createElement("div");
+                this.ep_logonbox.classList.add("logonbox");
+                //mainbox
+                this.ep_logonbox_mainbox = document.createElement("div");
+                this.ep_logonbox_mainbox.classList.add("mainbox");
+                this.ep_logonbox_mainbox.classList.add("status0");
+                this.ep_logonbox_mainbox_avatar = document.createElement("img");
+                this.ep_logonbox_mainbox_avatar.classList.add("avatar");
+                this.ep_logonbox_mainbox_avatar.src = "./images/avatar/kelin.png";
+                this.ep_logonbox_mainbox.appendChild(this.ep_logonbox_mainbox_avatar);
+                this.ep_logonbox_mainbox_name = document.createElement("div");
+                this.ep_logonbox_mainbox_name.classList.add("name");
+                this.ep_logonbox_mainbox_name.innerHTML = "其他用户";
+                this.ep_logonbox_mainbox.appendChild(this.ep_logonbox_mainbox_name);
+                this.ep_logonbox_mainbox_ciallo = document.createElement("div");
+                this.ep_logonbox_mainbox_ciallo.classList.add("ciallo");
+                this.ep_logonbox_mainbox_ciallo.innerHTML = "欢迎";
+                this.ep_logonbox_mainbox_ciallo.style.display = "none";
+                this.ep_logonbox_mainbox.appendChild(this.ep_logonbox_mainbox_ciallo);
+                this.ep_logonbox_mainbox_inputname = document.createElement("input");
+                this.ep_logonbox_mainbox_inputname.classList.add("inputname");
+                this.ep_logonbox_mainbox_inputname.type = "text";
+                this.ep_logonbox_mainbox_inputname.placeholder = "域\\用户名";
+                this.ep_logonbox_mainbox_inputname.oninput = () => { this.uiclock = 32; this.ep_logonbox_mainbox_errormsg.style.display = "none"; };
+                this.ep_logonbox_mainbox.appendChild(this.ep_logonbox_mainbox_inputname);
+                this.ep_logonbox_mainbox_inputpassword = document.createElement("input");
+                this.ep_logonbox_mainbox_inputpassword.classList.add("inputpassword");
+                this.ep_logonbox_mainbox_inputpassword.type = "password";
+                this.ep_logonbox_mainbox_inputpassword.placeholder = "密码";
+                this.ep_logonbox_mainbox_inputpassword.oninput = () => { this.uiclock = 32; this.ep_logonbox_mainbox_errormsg.style.display = "none"; };
+                this.ep_logonbox_mainbox.appendChild(this.ep_logonbox_mainbox_inputpassword);
+                this.ep_logonbox_mainbox_logonbutton = document.createElement("button");
+                this.ep_logonbox_mainbox_logonbutton.classList.add("logonbutton");
+                this.ep_logonbox_mainbox_logonbutton.innerHTML = "登录";
+                this.ep_logonbox_mainbox_logonbutton.onclick = () => { this.onlogonclick(); };
+                this.ep_logonbox_mainbox.appendChild(this.ep_logonbox_mainbox_logonbutton);
+                this.ep_logonbox_mainbox_errormsg = document.createElement("div");
+                this.ep_logonbox_mainbox_errormsg.classList.add("errormsg");
+                this.ep_logonbox_mainbox_errormsg.innerHTML = "很抱歉，现在无法登录到您的账号。<br>这是因为Unknown Hard Error。";
+                this.ep_logonbox_mainbox_errormsg.style.display = "none";
+                this.ep_logonbox_mainbox.appendChild(this.ep_logonbox_mainbox_errormsg);
+                //switchbox
+                this.ep_logonbox_switchbox = document.createElement("div");
+                this.ep_logonbox_switchbox.classList.add("switchbox");
+                this.ep_logonbox_switchbox.classList.add("status0");
+                this.ep_logonbox_switchbox_item0 = this.init_logonbox_genpart0("./images/avatar/HerrscherGSM.png", "rootadmin");
+                this.ep_logonbox_switchbox_item0.onclick = () => { this.switch2item(0); };
+                this.ep_logonbox_switchbox.appendChild(this.ep_logonbox_switchbox_item0);
+                this.ep_logonbox_switchbox_item1 = this.init_logonbox_genpart0("./images/avatar/kelin.png", "其他用户");
+                this.ep_logonbox_switchbox_item1.classList.add("selected");
+                this.ep_logonbox_switchbox_item1.dataset.type = "17";
+                this.ep_logonbox_switchbox_item1.onclick = () => { this.switch2item(1); };
+                this.ep_logonbox_switchbox.appendChild(this.ep_logonbox_switchbox_item1);
+                this.ep_logonbox_switchbox_item2 = this.init_logonbox_genpart0("./images/avatar/userimage.png", "创建用户");
+                this.ep_logonbox_switchbox_item2.dataset.type = "18";
+                this.ep_logonbox_switchbox_item2.onclick = () => { this.switch2item(2); };
+                this.ep_logonbox_switchbox.appendChild(this.ep_logonbox_switchbox_item2);
+                //addall
+                this.ep_logonbox.appendChild(this.ep_logonbox_mainbox);
+                this.ep_logonbox.appendChild(this.ep_logonbox_switchbox);
+                //Add all to document
+                this.ep_container.appendChild(this.ep_background0);
+                this.ep_container.appendChild(this.ep_background1);
+                this.ep_container.appendChild(this.ep_backgroundcover);
+                this.ep_container.appendChild(this.ep_timebox);
+                this.ep_container.appendChild(this.ep_iconlist);
+                this.ep_container.appendChild(this.ep_operatecatch);
+                this.ep_container.appendChild(this.ep_logonbox);
+                document.body.appendChild(this.ep_container);
+                this.syslock = 0;
+                this.transformBackgroundlock = 0;
+                this.transformBackground("./images/background/default.png");
+                window.WMSystem_EventCallBack_KeyDown = (event) => {
+                    if (event.keyCode == 32) {
+                        this.onclick();
+                    }
+                }
+                setTimeout(() => {
+                    this.updateTime();
+                    this.ep_timebox.classList.remove("status0");
+                    this.ep_timebox.classList.add("status1");
+                    this.ep_iconlist.classList.remove("status0");
+                    this.ep_iconlist.classList.add("status1");
+                    setTimeout(() => {
+                        this.ep_timebox.classList.remove("status1");
+                        this.ep_timebox.classList.add("status3");
+                        this.ep_iconlist.classList.remove("status1");
+                        this.ep_iconlist.classList.add("status3");
+                        this.systransforming = 0;
+                    }, 400);
+                    setInterval(() => {
+                        this.updateTime();
+                    }, 500);
+                }, 400);
+            },
+            switch2item: function(id) {
+                this.uiclock = 32;
+                this.temp_eplist = this.ep_logonbox_switchbox.getElementsByClassName("item");
+                //console.log(this.temp_eplist);
+                for (var i = 0; i < this.temp_eplist.length; i++) {
+                    if (i == id) {
+                        //console.log(i, id, this.temp_eplist[id].classList.contains("selected"));
+                        if (!this.temp_eplist[id].classList.contains("selected")) {
+                            this.temp_eplist[id].classList.add("selected");
+                            this.ep_logonbox_mainbox_errormsg.style.display = "none";
+                        }
+                        this.ep_logonbox_mainbox_avatar.src = this.temp_eplist[id].getElementsByTagName("img")[0].src;
+                        this.ep_logonbox_mainbox_name.innerHTML = this.temp_eplist[id].getElementsByTagName("div")[0].innerHTML;
+                        if ((this.temp_eplist[id].dataset.type == "17") || (this.temp_eplist[id].dataset.type == "18")) {
+                            this.ep_logonbox_mainbox_inputname.style.display = "block";
+                            if (this.ep_logonbox_mainbox_inputpassword.classList.contains("noinputstatus")) {
+                                this.ep_logonbox_mainbox_inputpassword.classList.remove("noinputstatus");
+                            }
+                            if (this.ep_logonbox_mainbox_logonbutton.classList.contains("noinputstatus")) {
+                                this.ep_logonbox_mainbox_logonbutton.classList.remove("noinputstatus");
+                            }
+                            if (this.ep_logonbox_mainbox_errormsg.classList.contains("noinputstatus")) {
+                                this.ep_logonbox_mainbox_errormsg.classList.remove("noinputstatus");
+                            }
+                        } else {
+                            this.ep_logonbox_mainbox_inputname.style.display = "none";
+                            if (!this.ep_logonbox_mainbox_inputpassword.classList.contains("noinputstatus")) {
+                                this.ep_logonbox_mainbox_inputpassword.classList.add("noinputstatus");
+                            }
+                            if (!this.ep_logonbox_mainbox_logonbutton.classList.contains("noinputstatus")) {
+                                this.ep_logonbox_mainbox_logonbutton.classList.add("noinputstatus");
+                            }
+                            if (!this.ep_logonbox_mainbox_errormsg.classList.contains("noinputstatus")) {
+                                this.ep_logonbox_mainbox_errormsg.classList.add("noinputstatus");
+                            }
+                        }
+                        if (id == 0) {
+                            this.transformBackground("./images/background/img0.png");
+                        } else {
+                            this.transformBackground("./images/background/default.png");
+                        }
+                    } else {
+                        //console.log(i, id, this.temp_eplist[i].classList.contains("selected"));
+                        if (this.temp_eplist[i].classList.contains("selected")) {
+                            this.temp_eplist[i].classList.remove("selected");
+                        }
+                    }
+                }
+            }
+        }
+
+        setTimeout(() => {
+            window.UserTerminal_LogonUI.init();
+        }, 1000);
+    </script>
+</body>
+
+</html>
